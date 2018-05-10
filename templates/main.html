@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>RCNN FRONTEND</title>
+	<link rel="stylesheet" href="static/css/my.css">
+</head>
+
+<body>
+	<div style="background-color: #B0E0E6;width: 100%;height: 60px;">
+		<h1 style="color: #ffffff;text-align: center;line-height:60px;">目标检测系统</h1>
+	</div>
+
+
+	<div id="btns">
+		<div class="btn" id="chooseImg"><span>选择文件</span></div>
+		<div class="btn" id="uploadImg"><span>检测目标</span></div>
+		<!-- <button id="upload" style="display:none;" onclick="changePic()"/> -->
+	</div>
+
+	<form id="uploadForm" action="" method="post" enctype="multipart/form-data">
+		<input name="file" type="file" id="input"/>
+		<input id="upload" type="button" style="display: none;"/>
+	</form>
+
+	<div id="imgs">
+		<div class="img" id="image">
+			<img src="{{ origin_pic }}" id="origin_img"
+			style="position:absolute;top:0;left:0;right:0;bottom:0;margin:auto;display:block;" />
+		</div>
+
+		<div class="img" id="result">
+			<img src="{{ result_pic }}" id="result_img"
+			style="position:absolute;top:0;left:0;right:0;bottom:0;margin:auto;display:block;"/>
+
+			<div style="width:50%;height:100%;padding:0;margin:0;float:left;box-sizing:border-box;">
+				<button id="btn_left" style="background: url(static/left.png);width:48px;height:48px;border:0px;
+				position:absolute;top:50%;margin-top:24px;display:none;" onclick="changePic()"/>
+			</div>
+
+			<div style="width:50%;height:100%;padding:0;margin:0;float:right;box-sizing:border-box;position:relative;">
+				<button id="btn_right" style="background: url(static/right.png);width:48px;height:48px;border:0px;
+				position:absolute;top:50%;margin-top:24px;right:0;display:none;" onclick="changePic()"/>
+			</div>
+		</div>
+
+	</div>
+
+
+<script
+src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+crossorigin="anonymous"></script>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript">
+	var global_index = 0;
+	var deviation = 0;
+	jQuery(document).ready(function($) {
+		$('#input').click(function(event) {})
+		.change(function(event) {
+			var file = this.files[0];
+			var fr = new FileReader();
+			fr.onload = function() {
+				// display
+				document.getElementById('image').getElementsByTagName('img')[0].src = fr.result;
+	        		// console.log(fr.result);
+	        	};
+	        	fr.readAsDataURL(file);
+	        	global_index = 0;
+	        });
+
+		$('#upload').click(function() {
+			var formData = new FormData();
+			var fileObj = document.getElementById("input").files[0];
+			formData.append('file', fileObj);
+			$.ajax({
+				url : "/post/file",
+				type : "post",
+				data : formData,
+				async : false,
+				processData : false,
+				contentType : false,
+				success : function(data) {
+					var obj = JSON.parse(data);
+					var ori = obj["origin"];
+					var res = obj["result"];
+					document.getElementById("origin_img").src = ori;
+					document.getElementById("result_img").src = res;
+					// change icon
+					deviation = 0;
+					changePic();
+				}
+
+			});
+
+		});
+
+		$('#chooseImg').bind('click', function(event) {
+			$('#input').trigger('click');
+		});
+
+		$('#uploadImg').bind('click', function(event) {
+			$('#upload').trigger('click');
+
+		});
+
+		$('#btn_left').bind('click', function(event) {
+			deviation = -1;
+			changePic();
+
+		});
+
+		$('#btn_right').bind('click', function(event) {
+			deviation = 1;
+			changePic();
+
+		});
+		
+	});
+
+	var xmlhttp;
+	var url = "/resultList/123";
+	function changePic()
+	{
+		xmlhttp = null;
+		if (window.XMLHttpRequest)
+	  	{// code for Firefox, Opera, IE7, etc.
+	  		xmlhttp = new XMLHttpRequest();
+	  	}
+	  	else if (window.ActiveXObject)
+		{// code for IE6, IE5
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		if (xmlhttp != null)
+		{
+			xmlhttp.onreadystatechange = stateChange;
+			xmlhttp.open("GET", url, true);
+			xmlhttp.send(null);
+		}
+		else
+		{
+			alert("Your browser does not support XMLHTTP.");
+		}
+	}
+
+	function stateChange()
+	{
+		if (xmlhttp.readyState == 4)
+  		{// 4 = "loaded"
+  		if (xmlhttp.status == 200)
+    	{// 200 = "OK"
+    		var obj = JSON.parse(xmlhttp.responseText);
+    		var pics = obj["data"];
+    		console.log(pics);
+    		var len = pics.length;
+    		if (len == 0) {
+    			console.log("error");
+    		}
+    		// deviation
+    		global_index = (global_index + deviation + len) % len;
+    		console.log("deviation :" + deviation);
+    		console.log("global_index :" + global_index);
+    		document.getElementById('result_img').src = pics[global_index];
+
+    		// coin show
+    		if (global_index == 0) {
+    			document.getElementById('btn_left').style.display = "none";
+    		} else{
+    			document.getElementById('btn_left').style.display = "block";
+    		}
+    		if (global_index == len - 1) {
+    			document.getElementById('btn_right').style.display = "none";
+    		} else{
+    			document.getElementById('btn_right').style.display = "block";
+    		}
+		}
+		else
+		{
+			console.log("Get Pics Fail");
+		}
+	}
+}
+</script>
+</body>
+
+</html>

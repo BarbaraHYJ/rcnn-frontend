@@ -1,0 +1,66 @@
+* {
+	margin: 0;
+	padding: 0;
+	font-size: 14px;
+
+}
+
+body {
+	min-width: 1080px;
+	padding: 0 30px;
+}
+
+body header {
+	margin: 10px 0;
+}
+
+input[type="file"] {
+	display: none;
+}
+
+.btn {
+	width: 120px;
+	border-radius: 10px;
+	text-align: center;
+	color: #fff;
+}
+
+#datain.btn {
+	background-color: #409eff;
+
+}
+
+#datain.btn:hover {
+	background-color: #66b1ff;
+}
+
+#datakmeans.btn {
+	background-color: #67c23a;
+}
+
+#datakmeans.btn:hover {
+	background-color: #85ce61;
+}
+
+#dataout.btn {
+	background-color: #909399;
+}
+
+#dataout.btn:hover {
+	background-color: #a6a9ad;
+}
+
+#showpanel {
+	position: relative;
+	left: 260px;
+}
+ 
+#filename h1:before {
+	display: inline-block;
+	content: '';
+	height: 10px;
+	width: 10px;
+	margin-right: 5px;
+	border-radius: 5px;
+	background-color: #17a2b8;
+}
