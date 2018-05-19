@@ -45,11 +45,13 @@ def up_file():
 		if file and allow_file(file.filename):
 			filename = str(int(time.time())) + secure_filename(file.filename)
 			file.save(os.path.join(app.config['UPLOADS_DEFAULT_DEST'], filename))
-			resu = os.system('python ' + 
+			command = 'python ' + app.config['DEMO_PATH'] + '/mydemo.py ' + '--cpu --net zf ' + '--pic ' + filename + ' --path ' + os.path.join(app.config['PROJECT_PATH'] , 'files')
+                        print 'command:' + command
+                        resu = os.system('python ' + 
 				app.config['DEMO_PATH'] + '/mydemo.py ' + 
-				'--cpu --net zf' + 
-				'--pic ' + filename +
-				'--path ' + os.path.join(app.config['PROJECT_PATH'] , 'files'))
+				' --cpu --net zf ' + 
+				' --pic ' + filename +
+				' --path ' + os.path.join(app.config['PROJECT_PATH'] , 'files'))
 			# return redirect(url_for('upload_file', origin = filename, result = filename))
 			# return render_template('main.html', origin_pic= '/uploads/' + origin, 
 			# result_pic = '/results/' + result)
