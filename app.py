@@ -1,13 +1,15 @@
 from flask import Flask, redirect, url_for, request, render_template, make_response, abort, jsonify, send_from_directory, Response
-from config import UPLOAD_PATH, RESULT_PATH, ALLOWED_EXTENSIONS
+from config import *
 import os
 from werkzeug import secure_filename
 import json
+import time
 
 app = Flask(__name__)
 app.config['UPLOADS_DEFAULT_DEST'] = UPLOAD_PATH
 app.config['RESULT_DEFAULT_DEST'] = RESULT_PATH
 app.config['PROJECT_PATH'] = os.getcwd()
+app.config['DEMO_PATH'] = DEMO_PATH
 
 def allow_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
@@ -41,9 +43,11 @@ def up_file():
 	if request.method == 'POST':
 		file = request.files['file']
 		if file and allow_file(file.filename):
-			filename = secure_filename(file.filename)
+			filename = str(int(time.time())) + secure_filename(file.filename)
 			file.save(os.path.join(app.config['UPLOADS_DEFAULT_DEST'], filename))
-			resu = os.system('python ./mydemo.py --cpu --net zf' + 
+			resu = os.system('python ' + 
+				app.config['DEMO_PATH'] + '/mydemo.py ' + 
+				'--cpu --net zf' + 
 				'--pic ' + filename +
 				'--path ' + os.path.join(app.config['PROJECT_PATH'] , 'files'))
 			# return redirect(url_for('upload_file', origin = filename, result = filename))
@@ -72,4 +76,3 @@ def result_file(filename):
 
 if __name__ == '__main__':
 	app.run()
-
