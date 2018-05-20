@@ -46,7 +46,12 @@ def up_file():
 			filename = str(int(time.time())) + secure_filename(file.filename)
 			file.save(os.path.join(app.config['UPLOADS_DEFAULT_DEST'], filename))
 			command = 'python ' + app.config['DEMO_PATH'] + '/mydemo.py ' + '--cpu --net zf ' + '--pic ' + filename + ' --path ' + os.path.join(app.config['PROJECT_PATH'] , 'files')
-            resu = os.system('python ' + app.config['DEMO_PATH'] + '/mydemo.py ' + ' --net zf10000 ' + ' --pic ' + filename + ' --resu ' + os.path.join(app.config['PROJECT_PATH'] , 'results') + ' --path ' + os.path.join(app.config['PROJECT_PATH'] , 'files'))
+			resu = os.system('python ' +
+            	app.config['DEMO_PATH'] + '/mydemo.py ' +
+            	' --net zf10000 ' +
+            	' --pic ' + filename +
+            	' --resu ' + os.path.join(app.config['PROJECT_PATH'] , 'results') +
+            	' --path ' + os.path.join(app.config['PROJECT_PATH'] , 'files'))
 			origin_and_result = {}
 			origin_and_result['origin'] = 'uploads/' + filename
 			origin_and_result['result'] = 'results/' + filename
