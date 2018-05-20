@@ -55,6 +55,7 @@ crossorigin="anonymous"></script>
 <script type="text/javascript">
 	var global_index = 0;
 	var deviation = 0;
+	var result_name;
 	jQuery(document).ready(function($) {
 		$('#input').click(function(event) {})
 		.change(function(event) {
@@ -84,6 +85,8 @@ crossorigin="anonymous"></script>
 					var obj = JSON.parse(data);
 					var ori = obj["origin"];
 					var res = obj["result"];
+					result_name = res.split("/")[1];
+					console.log("res:" + res + "  result:" + result_name);
 					document.getElementById("origin_img").src = ori;
 					document.getElementById("result_img").src = res;
 					// change icon
@@ -119,9 +122,10 @@ crossorigin="anonymous"></script>
 	});
 
 	var xmlhttp;
-	var url = "/resultList/123";
+	var url;
 	function changePic()
 	{
+		url = "/resultList/" + result_name;
 		xmlhttp = null;
 		if (window.XMLHttpRequest)
 	  	{// code for Firefox, Opera, IE7, etc.
