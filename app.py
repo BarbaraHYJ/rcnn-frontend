@@ -49,9 +49,11 @@ def up_file():
                         print 'command:' + command
                         resu = os.system('python ' + 
 				app.config['DEMO_PATH'] + '/mydemo.py ' + 
-				' --cpu --net zf ' + 
+				' --net zf10000 ' + 
 				' --pic ' + filename +
+                ' --resu ' + os.path.join(app.config['PROJECT_PATH'] , 'results') +
 				' --path ' + os.path.join(app.config['PROJECT_PATH'] , 'files'))
+                        print 'command:' + command
 			# return redirect(url_for('upload_file', origin = filename, result = filename))
 			# return render_template('main.html', origin_pic= '/uploads/' + origin, 
 			# result_pic = '/results/' + result)
