@@ -53,10 +53,13 @@ def up_file():
 				' --pic ' + filename +
                 ' --resu ' + os.path.join(app.config['PROJECT_PATH'] , 'results') +
 				' --path ' + os.path.join(app.config['PROJECT_PATH'] , 'files'))
+<<<<<<< HEAD
                         print 'command:' + command
 			# return redirect(url_for('upload_file', origin = filename, result = filename))
 			# return render_template('main.html', origin_pic= '/uploads/' + origin, 
 			# result_pic = '/results/' + result)
+=======
+>>>>>>> 25f3802c80fc150defd1fd3302b118c667f1ebb5
 			origin_and_result = {}
 			origin_and_result['origin'] = 'uploads/' + filename
 			origin_and_result['result'] = 'results/' + filename
@@ -64,8 +67,7 @@ def up_file():
 
 @app.route('/resultList/<filename>')
 def result_list(filename):
-	s=['results/00001.jpg','results/00002.jpg'] 
-	# s = ['results/00001.jpg']  
+	s=['results/' + filename] 
 	t = {}  
 	t['data'] = s  
 	return json.dumps(t, ensure_ascii=False)
